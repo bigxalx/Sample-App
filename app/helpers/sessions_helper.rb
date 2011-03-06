@@ -22,9 +22,9 @@ module SessionsHelper
     user == current_user
   end
   
-  def deny_access
+  def deny_access(redirect_path = signin_path, notice = "Please sign in to access this page")
     store_location
-    redirect_to signin_path, :notice => "Please sign in to access this page"
+    redirect_to redirect_path, :notice => notice
   end
   
   def redirect_back_or(default)

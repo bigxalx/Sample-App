@@ -16,9 +16,11 @@ class UsersController < ApplicationController
   def new
     @user = User.new
     @title = "Sign up"
+    deny_access(current_user, "You already have an account!") if signed_in?
   end
   
   def create
+    deny_access(current_user, "You already have an account!") if signed_in?
     @user = User.new(params[:user])
     if @user.save
       sign_in @user
@@ -48,9 +50,14 @@ class UsersController < ApplicationController
     end
     
     def destroy
+      if User.find(params[:id]) == current_user
+        redirect_to users_path, :alert => "Can't delete yourself"
+      
+      else
       User.find(params[:id]).destroy
       flash[:succes] = "User deleted."
       redirect_to users_path
+    end
     end
     
     private 
